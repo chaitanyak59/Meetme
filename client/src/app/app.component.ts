@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
   users: User[] = [];
 
   ngOnInit(): void {
-    this.http.get("http://localhost:5115/api/users")
+    this.http.get("https://localhost:5001/api/users")
           .subscribe((res: any) => {
             this.users = res;
         });

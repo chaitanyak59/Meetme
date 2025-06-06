@@ -1,13 +1,13 @@
 using API.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class Users : ControllerBase
+    [Authorize]
+    public class Users : BaseApiController
     {
         private readonly ILogger<Users> _logger;
         private readonly MeetMeDBContext context;
