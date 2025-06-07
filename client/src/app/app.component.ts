@@ -1,8 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
+import { APP_CONFIG } from './utils/config';
+import { NavComponent } from "./nav/nav.component";
+import { AccountService } from './services/accounts.service';
+import { UsersService } from './services/users.service';
 
 interface User {
   id: number;
@@ -12,20 +14,57 @@ interface User {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FormsModule],
+  imports: [RouterOutlet, FormsModule, NavComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: []
 })
 export class AppComponent implements OnInit {
-  http  = inject(HttpClient);
-  title = 'Meet Me';
+  accountSvc  = inject(AccountService);
+  usersSvc    = inject(UsersService);
+
+  config      = inject(APP_CONFIG);
+  title       = 'Meet Me';
   users: User[] = [];
+  isLoggedIn: boolean = false;
 
   ngOnInit(): void {
-    this.http.get("https://localhost:5001/api/users")
-          .subscribe((res: any) => {
-            this.users = res;
-        });
+    this.accountSvc.isLoggedIn$.subscribe(isLoggedIn => {
+      this.isLoggedIn = isLoggedIn;
+    });
+
+    this.getUsers();
   }
+
+  getUsers(): void {
+    this.usersSvc.getAllUsers().subscribe({
+      next: (response: User[]) => {
+        this.users = response;
+      },
+      error: (error: any) => {
+        console.error('Failed to fetch users:', error);
+      }
+    });
+  }
+
+  handleLogin(event: { username: string, password: string }): void {
+    this.accountSvc.loginUser({
+      userName: event.username,
+      password: event.password
+    }).subscribe({
+      next: (response: any) => {
+        localStorage.setItem('user.token', response.token);
+        this.getUsers();
+      },
+      error: (error: any) => {
+        console.error('Login failed:', error);
+      }
+    });
+  }
+
+  handleLogout(): void {
+    this.accountSvc.logoutUser();
+    this.users = [];
+  }
+
 }

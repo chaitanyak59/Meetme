@@ -1,0 +1,43 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Meet me</a>
+
+        <!-- Navigation Menu -->
+        @if(isLoggedIn) {
+            <ul class="navbar-nav me-auto mb-2 mb-md-0" *ngIf="isLoggedIn">
+                <li class="nav-item">
+                    <a class="nav-link">Matches</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">Lists</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link">Messages</a>
+                </li>
+            </ul>
+        }
+
+        <!-- Account Menu -->
+        @if(isLoggedIn) {
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Welcome, {{ model.userName || 'Guest' }}
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <li><button class="dropdown-item" type="button">Edit Profile</button></li>
+                    <li><button class="dropdown-item" type="button" (click)="logout()">Logout</button></li>
+                </ul>
+            </div>
+        }
+
+        <form #loginForm="ngForm" (ngSubmit)="login()" class="d-flex" *ngIf="!isLoggedIn">
+            <input class="form-control me-2" type="text" placeholder="User name" name="userName"
+                [(ngModel)]="model.userName" required>
+            <input class="form-control me-2" type="password" placeholder="Password" [(ngModel)]="model.password"
+                name="password" required>
+
+            <button class="btn btn-outline-success" type="submit">Login</button>
+        </form>
+    </div>
+</nav>
