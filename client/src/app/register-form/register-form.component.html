@@ -1,0 +1,19 @@
+<form #form="ngForm" (ngSubmit)="register(form)" class="card p-4 shadow-lg w-50 mx-auto mt-5">
+    <h3 class="mb-4 text-center">Sign up</h3>
+
+    <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" id="username" name="username" ngModel required class="form-control"
+            placeholder="Enter username" />
+    </div>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" name="password" ngModel required minlength="6" class="form-control"
+            placeholder="Enter password" />
+    </div>
+    <div class="d-grid gap-2 col-6 mx-auto">
+        <button class="btn btn-success" type="submit" [disabled]="form.invalid">Sign up</button>
+        <button class="btn btn-outline-light" type="button" (click)="cancel()">Cancel</button>
+    </div>
+</form>

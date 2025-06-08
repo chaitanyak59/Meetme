@@ -5,6 +5,8 @@ import { APP_CONFIG } from './utils/config';
 import { NavComponent } from "./nav/nav.component";
 import { AccountService } from './services/accounts.service';
 import { UsersService } from './services/users.service';
+import { CommonModule } from '@angular/common';
+import { HomeComponent } from "./home/home.component";
 
 interface User {
   id: number;
@@ -14,7 +16,7 @@ interface User {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FormsModule, NavComponent],
+  imports: [RouterOutlet, FormsModule, NavComponent, CommonModule, HomeComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: []
@@ -22,17 +24,9 @@ interface User {
 export class AppComponent implements OnInit {
   accountSvc  = inject(AccountService);
   usersSvc    = inject(UsersService);
-
-  config      = inject(APP_CONFIG);
-  title       = 'Meet Me';
   users: User[] = [];
-  isLoggedIn: boolean = false;
 
   ngOnInit(): void {
-    this.accountSvc.isLoggedIn$.subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;
-    });
-
     this.getUsers();
   }
 

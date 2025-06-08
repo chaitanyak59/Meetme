@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-nav',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './nav.component.html',
   styleUrl: './nav.component.css'
 })
@@ -13,7 +14,8 @@ export class NavComponent {
   @Output() loginSubmit: EventEmitter<{username: string, password: string}> = new EventEmitter();
   @Output() logoutSubmit: EventEmitter<void> = new EventEmitter();
 
-  @Input() isLoggedIn: boolean = false;
+  @Input() isLoggedIn: {userName: string, isLoggedIn: boolean} | null = null;
+
 
   model: any = {
     userName: '',

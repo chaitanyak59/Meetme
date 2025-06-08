@@ -60,7 +60,7 @@ public class AccountController : BaseApiController
             {
                 return BadRequest("Failed to register user");
             }
-            return Ok(new { Message = "User registered successfully", Username = username });
+            return Ok(new { Message = "User registered successfully", UserName = username, Token = tokenService.CreateToken(user) });
         }
     }
 
@@ -94,6 +94,6 @@ public class AccountController : BaseApiController
             return Unauthorized("Invalid username or password");
         }
 
-        return Ok(new { Message = "Login successful", Token = tokenService.CreateToken(user)});
+        return Ok(new { Message = "Login successful", Token = tokenService.CreateToken(user), user.UserName });
     }
 }
