@@ -3,10 +3,11 @@ import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
 import { routes } from './app.routes';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { APP_CONFIG } from './utils/config';
 import { environment } from '../environments/environment';
 import { provideToastr } from 'ngx-toastr';
+import { errorsInterceptor } from './errors.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,10 +15,9 @@ export const appConfig: ApplicationConfig = {
     provideToastr({
       timeOut: 2000,
       positionClass: 'toast-bottom-right',
-      closeButton: true,
       progressBar: true
     }),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([errorsInterceptor])),
     provideRouter(routes),
     {
       provide: APP_CONFIG,

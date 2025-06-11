@@ -18,7 +18,7 @@ export class AccountService extends BaseHttpService {
     }
 
     loginUser(data: { userName: string, password: string }) {
-        return this.post<any>('account/login', data).pipe(
+        return this.post<any>('account/login', null).pipe(
             tap(response => {
                 if (response && response.token) {
                     localStorage.setItem('user.token', response.token);

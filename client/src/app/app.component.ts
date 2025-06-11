@@ -38,6 +38,7 @@ export class AppComponent {
         this.router.navigateByUrl('/');
       },
       error: (error: any) => {
+          debugger
           this.toastr.error(`${error.error}`, 'Something went wrong!');
       }
     });
