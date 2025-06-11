@@ -1,12 +1,12 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { APP_CONFIG } from './utils/config';
 import { NavComponent } from "./nav/nav.component";
 import { AccountService } from './services/accounts.service';
 import { UsersService } from './services/users.service';
 import { CommonModule } from '@angular/common';
-import { HomeComponent } from "./home/home.component";
+import { ToastNoAnimationModule, ToastrService } from 'ngx-toastr';
 
 interface User {
   id: number;
@@ -16,30 +16,17 @@ interface User {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FormsModule, NavComponent, CommonModule, HomeComponent],
+  imports: [RouterOutlet, FormsModule, NavComponent, CommonModule, ToastNoAnimationModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: []
 })
-export class AppComponent implements OnInit {
-  accountSvc  = inject(AccountService);
-  usersSvc    = inject(UsersService);
-  users: User[] = [];
+export class AppComponent {
+  accountSvc = inject(AccountService);
+  usersSvc = inject(UsersService);
+  router = inject(Router);
+  toastr = inject(ToastrService);
 
-  ngOnInit(): void {
-    this.getUsers();
-  }
-
-  getUsers(): void {
-    this.usersSvc.getAllUsers().subscribe({
-      next: (response: User[]) => {
-        this.users = response;
-      },
-      error: (error: any) => {
-        console.error('Failed to fetch users:', error);
-      }
-    });
-  }
 
   handleLogin(event: { username: string, password: string }): void {
     this.accountSvc.loginUser({
@@ -47,18 +34,18 @@ export class AppComponent implements OnInit {
       password: event.password
     }).subscribe({
       next: (response: any) => {
-        localStorage.setItem('user.token', response.token);
-        this.getUsers();
+        this.toastr.success(`Welcome ${response.userName}!`, 'Succesfully logged in');
+        this.router.navigateByUrl('/');
       },
       error: (error: any) => {
-        console.error('Login failed:', error);
+          this.toastr.error(`${error.error}`, 'Something went wrong!');
       }
     });
   }
 
   handleLogout(): void {
     this.accountSvc.logoutUser();
-    this.users = [];
+    this.router.navigateByUrl('/');
+    this.toastr.info("", 'Logged out!');
   }
-
 }
