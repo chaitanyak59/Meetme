@@ -1,0 +1,35 @@
+.card-img-container {
+  position: relative; /* add this */
+  overflow: hidden;
+  height: 200px;
+}
+.card-img-top {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-img-container:hover .card-img-top {
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.member-icons {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: -30px;
+    margin-right: auto;
+    margin-left: auto;
+    opacity: 0;
+}
+
+.card-img-container:hover .member-icons {
+    bottom: 10px;
+    opacity: 1;
+}
+
+.animate {
+    transition: all 0.3s ease-in-out;
+}

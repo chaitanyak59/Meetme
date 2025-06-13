@@ -1,4 +1,5 @@
 using API.Data;
+using API.DTO;
 using API.Repository;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -26,7 +27,7 @@ namespace API.Controllers
         public async Task<ActionResult> AllUsers()
         {
             var users = await _userRepository.GetAllUsersAsync();
-            return Ok(_mapper.Map<IEnumerable<DTO.MemberDTO>>(users));
+            return Ok(_mapper.Map<IEnumerable<MemberDTO>>(users));
         }
 
         [HttpGet("{id:int}")]
@@ -37,7 +38,18 @@ namespace API.Controllers
             {
                 return NotFound("Cannot be found");
             }
-            return Ok(_mapper.Map<DTO.MemberDTO>(user));
+            return Ok(_mapper.Map<MemberDTO>(user));
+        }
+
+        [HttpGet("{name}")]
+        public async Task<ActionResult> GetUserByName(string name)
+        {
+            var user = await _userRepository.GetUserByNameAsync(name);
+            if (null == user)
+            {
+                return NotFound("Cannot be found");
+            }
+            return Ok(_mapper.Map<MemberDTO>(user));
         }
     }
 }

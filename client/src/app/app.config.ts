@@ -8,6 +8,7 @@ import { APP_CONFIG } from './utils/config';
 import { environment } from '../environments/environment';
 import { provideToastr } from 'ngx-toastr';
 import { errorsInterceptor } from './errors.interceptor';
+import { GALLERY_CONFIG, GalleryConfig } from 'ng-gallery';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +23,12 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_CONFIG,
       useValue: environment
+    },
+    {
+      provide: GALLERY_CONFIG,
+      useValue: {
+        autoHeight: true,
+      } as GalleryConfig
     }
   ]
 };

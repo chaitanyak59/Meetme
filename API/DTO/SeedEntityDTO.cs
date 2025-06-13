@@ -17,7 +17,7 @@ public class SeedEntityDTO
         // Launch Pending Migrations
         await dbContext.Database.MigrateAsync();
 
-        if (dbContext.Users.Any())
+        if (dbContext.Users.AsNoTracking().Any())
         {
             Console.WriteLine("Skipped seeding. Data already exists.");
             return;

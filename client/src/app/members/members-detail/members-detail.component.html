@@ -1,1 +1,41 @@
-<p>members-detail works!</p>
+@if (member) {
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <h2>{{ member.knownAs }}'s Profile</h2>
+            <img [src]="member.photoUrl || '/assets/user.png'" class="img-fluid rounded-circle mb-3"
+                alt="{{ member.knownAs }}" style="width: 200px; height: 200px" />
+            <p><strong>Age:</strong> {{ member.age }}</p>
+            <p><strong>City:</strong> {{ member.city }}</p>
+            <p><strong>Last Active:</strong> {{ convertDateToLocale(member.lastActive) }}</p>
+            <p><strong>Country:</strong> {{ member.country }}</p>
+            <p><strong>Interests:</strong> {{ member.interests }}</p>
+            <div class="d-flex gap-2 mb-4">
+                <label class="btn btn-info" tabindex="0" role="button">Like</label>
+                <label class="btn btn-success" tabindex="0" role="button">Send Message</label>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="mt-2">
+                <tabset>
+                    <tab class="mt-4" [heading]="'About ' + member.username | titlecase" id="tab1">
+                        <p>{{ member.introduction }}</p>
+                        <h5>Looking For</h5>
+                        <p>{{member.lookingFor}}</p>
+                    </tab>
+                    <tab class="mt-4" heading="Interests">
+                        {{member.interests}}
+                    </tab>
+                    <tab class="mt-4" heading="Photos" #photosTab ="tab">
+                        @if(photosTab.active) {
+                            <gallery *ngIf="images?.length" [items]="images" thumbPosition="left" class="gallery"></gallery>
+                        }
+                    </tab>
+                    <tab class="mt-4" heading="Messages">Messages TBD</tab>
+                </tabset>
+            </div>
+
+        </div>
+    </div>
+</div>
+}

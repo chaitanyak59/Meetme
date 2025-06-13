@@ -1,0 +1,9 @@
+.app-card {
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.app-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}

@@ -14,5 +14,6 @@ public class MemberDTO
     public string City { get; set; } = string.Empty;
     public string Country { get; set; } = string.Empty;
     public string PhotoUrl { get; set; } = string.Empty;
-    public ICollection<PhotoDTO> Photos { get; set; }
+    public DateTime LastActive { get; set; } = DateTime.UtcNow;
+    public ICollection<PhotoDTO> Photos { get; set; } = new List<PhotoDTO>();
 }
