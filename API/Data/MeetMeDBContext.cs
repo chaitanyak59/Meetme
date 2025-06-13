@@ -8,7 +8,7 @@ public class MeetMeDBContext : DbContext
 {
     private readonly IConfiguration _config;
 
-    public MeetMeDBContext(DbContextOptions<MeetMeDBContext> options, IConfiguration config) 
+    public MeetMeDBContext(DbContextOptions<MeetMeDBContext> options, IConfiguration config)
         : base(options)
     {
         _config = config;
@@ -19,5 +19,14 @@ public class MeetMeDBContext : DbContext
         Console.WriteLine(optionsBuilder.IsConfigured);
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<AppUser>()
+            .HasMany(e => e.Photos)
+            .WithOne(e => e.AppUser)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
+
     public DbSet<AppUser> Users { get; set; }
+    public DbSet<Photo> Photos { get; set; }
 }

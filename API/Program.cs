@@ -1,24 +1,11 @@
 using System.Text;
+using API.DTO;
 using API.Extensions;
 using API.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("MeetMe:TokenKey")!)),
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
-        };
-    });
 
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddControllers();
@@ -32,6 +19,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+SeedEntityDTO.SeedDataAsync(app.Services).GetAwaiter().GetResult();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseDefaultFiles();
 app.UseStaticFiles();

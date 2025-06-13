@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using API.Data;
 using API.DTO;
 using API.Entities;
+using API.Repository;
 using API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,13 +12,13 @@ namespace API.Controllers;
 
 public class AccountController : BaseApiController
 {
-    private readonly MeetMeDBContext context;
+    private readonly IUserRepository userRepository;
 
     public ITokenService tokenService { get; }
 
-    public AccountController(MeetMeDBContext context, ITokenService tokenService)
+    public AccountController(IUserRepository userRepository, ITokenService tokenService)
     {
-        this.context = context;
+        this.userRepository = userRepository;
         this.tokenService = tokenService;
     }
 
@@ -33,11 +34,8 @@ public class AccountController : BaseApiController
         var password = registerUserDTO.Password;
 
         // Check if the user already exists
-        var existingUser = await this.context.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.UserName == username);
-
-        if (existingUser != null)
+        var existingUser = await this.userRepository.UserExistsAsync(username);
+        if (existingUser)
         {
             return BadRequest("Username already exists");
         }
@@ -51,12 +49,11 @@ public class AccountController : BaseApiController
             {
                 UserName = username,
                 PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt
+                PasswordSalt = passwordSalt,
+                Gender = "Male",
             };
 
-            this.context.Users.Add(user);
-            var result = await this.context.SaveChangesAsync();
-            if (result <= 0)
+            if (await userRepository.RegisterUserAsync(user) == false)
             {
                 return BadRequest("Failed to register user");
             }
@@ -76,9 +73,7 @@ public class AccountController : BaseApiController
         var password = loginUserDTO.Password;
 
         // Find the user by username
-        var user = await this.context.Users
-            .AsNoTracking()
-            .FirstOrDefaultAsync(u => u.UserName.ToLower() == username);
+        var user = await this.userRepository.GetUserByNameAsync(username);
 
         if (user == null)
         {

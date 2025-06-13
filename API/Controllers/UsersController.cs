@@ -1,4 +1,5 @@
 using API.Data;
+using API.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,25 +11,25 @@ namespace API.Controllers
     public class Users : BaseApiController
     {
         private readonly ILogger<Users> _logger;
-        private readonly MeetMeDBContext context;
+        private readonly IUserRepository _userRepository;
 
-        public Users(MeetMeDBContext _context, ILogger<Users> logger)
+        public Users(IUserRepository repository, ILogger<Users> logger)
         {
-            context = _context;
             _logger = logger;
+            _userRepository = repository;
         }
 
         [HttpGet()]
         public async Task<ActionResult> AllUsers()
         {
-            var users = await context.Users.AsNoTracking().ToListAsync();
+            var users = await _userRepository.GetAllUsersAsync();
             return Ok(users);
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult> GetUser(int id)
         {
-            var user = await context.Users.FindAsync(id);
+            var user = await _userRepository.GetUserByIdAsync(id);
             if (null == user)
             {
                 return NotFound("Cannot be found");

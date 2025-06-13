@@ -13,7 +13,6 @@ export const errorsInterceptor: HttpInterceptorFn = (req, next) => {
     if (error) {
       switch (error.status) {
         case 400:
-          debugger;
           if (error.error.errors || error.errors) {
             var errs = error.error.errors || error.errors;
             const modelErrors = [];
