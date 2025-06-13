@@ -17,16 +17,13 @@ public static class ApplicationServiceExtensions
             opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
         });
 
-        services.AddCors(options =>
-        {
-            options.AddPolicy("AllowAll", policy =>
-            {
-                policy.AllowAnyOrigin()
-                    .AllowAnyHeader()
-                    .AllowAnyMethod()
-                    .SetPreflightMaxAge(TimeSpan.FromMinutes(10));
-            });
-        });
+        services.AddCors(policy =>
+                policy.AddDefaultPolicy(builder =>
+                    builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .SetPreflightMaxAge(TimeSpan.FromMinutes(10))
+                ));
 
         // Application Services
         services.AddScoped<ITokenService, TokenService>();

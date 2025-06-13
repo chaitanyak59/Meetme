@@ -1,5 +1,5 @@
 using System;
-using API.Extensions;
+using API.DTO;
 
 namespace API.Middlewares;
 

@@ -1,6 +1,6 @@
 using System;
 
-namespace API.Extensions;
+namespace API.DTO;
 
 public class ApiException
 {
