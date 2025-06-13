@@ -1,5 +1,6 @@
 using API.Data;
 using API.Repository;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,18 +13,20 @@ namespace API.Controllers
     {
         private readonly ILogger<Users> _logger;
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public Users(IUserRepository repository, ILogger<Users> logger)
+        public Users(IUserRepository repository, ILogger<Users> logger, IMapper mapper)
         {
             _logger = logger;
             _userRepository = repository;
+            _mapper = mapper;
         }
 
         [HttpGet()]
         public async Task<ActionResult> AllUsers()
         {
             var users = await _userRepository.GetAllUsersAsync();
-            return Ok(users);
+            return Ok(_mapper.Map<IEnumerable<DTO.MemberDTO>>(users));
         }
 
         [HttpGet("{id:int}")]
@@ -34,7 +37,7 @@ namespace API.Controllers
             {
                 return NotFound("Cannot be found");
             }
-            return Ok(user);
+            return Ok(_mapper.Map<DTO.MemberDTO>(user));
         }
     }
 }

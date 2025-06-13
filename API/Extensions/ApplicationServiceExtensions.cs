@@ -13,6 +13,7 @@ public static class ApplicationServiceExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.AddDbContext<MeetMeDBContext>(opt =>
         {
             opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));

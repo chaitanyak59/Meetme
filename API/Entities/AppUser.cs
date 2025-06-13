@@ -20,9 +20,4 @@ public class AppUser
     public string? City { get; set; } = string.Empty;
     public string? Country { get; set; } = string.Empty;
     public virtual ICollection<Photo> Photos { get; set; } = new List<Photo>();
-
-    public int GetAge()
-    {
-        return DateOfBirth.CalculateAge();
-    }
 }
