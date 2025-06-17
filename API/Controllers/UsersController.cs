@@ -1,5 +1,6 @@
 using API.Data;
 using API.DTO;
+using API.Entities;
 using API.Repository;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -50,6 +51,24 @@ namespace API.Controllers
                 return NotFound("Cannot be found");
             }
             return Ok(_mapper.Map<MemberDTO>(user));
+        }
+
+        [HttpPost()]
+        public async Task<ActionResult> UpdateUserProfile([FromBody] UpdateMemberDTO updateMemberDTO)
+        {
+            var username = User.Identity?.Name;
+            if (string.IsNullOrEmpty(username))
+            {
+                return BadRequest("Unauthorized");
+            }
+            var user = await _userRepository.GetUserByNameAsync(username);
+            if (null == user)
+            {
+                return NotFound("Cannot be found");
+            }
+            _mapper.Map<UpdateMemberDTO, AppUser?>(updateMemberDTO, user);
+            await _userRepository.UpdateUserAsync(user);
+            return NoContent();
         }
     }
 }

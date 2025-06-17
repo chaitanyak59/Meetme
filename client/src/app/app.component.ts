@@ -7,6 +7,7 @@ import { AccountService } from './services/accounts.service';
 import { UsersService } from './services/users.service';
 import { CommonModule } from '@angular/common';
 import { ToastNoAnimationModule, ToastrService } from 'ngx-toastr';
+import { NgxSpinnerComponent } from 'ngx-spinner';
 
 interface User {
   id: number;
@@ -16,7 +17,7 @@ interface User {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, FormsModule, NavComponent, CommonModule, ToastNoAnimationModule],
+  imports: [RouterOutlet, FormsModule, NavComponent, CommonModule, ToastNoAnimationModule, NgxSpinnerComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: []

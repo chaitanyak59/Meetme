@@ -40,9 +40,10 @@ public class UserRepository : IUserRepository
         return _context.SaveChangesAsync().ContinueWith(task => task.Result > 0);
     }
 
-    public Task UpdateUserAsync(AppUser user)
+    public Task<bool> UpdateUserAsync(AppUser user)
     {
-        throw new NotImplementedException();
+        _context.Users.Update(user);
+        return _context.SaveChangesAsync().ContinueWith(task => task.Result > 0);
     }
 
     public async Task<bool> UserExistsAsync(string username)

@@ -11,7 +11,7 @@ public interface IUserRepository
     Task<AppUser?>GetUserByNameAsync(string userName);
     Task<bool> UserExistsAsync(string username);
     Task AddUserAsync(AppUser user);
-    Task UpdateUserAsync(AppUser user);
+    Task<bool> UpdateUserAsync(AppUser user);
     Task DeleteUserAsync(int id);
     Task<bool> RegisterUserAsync(AppUser user);
 }

@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
@@ -9,6 +9,8 @@ import { environment } from '../environments/environment';
 import { provideToastr } from 'ngx-toastr';
 import { errorsInterceptor } from './errors.interceptor';
 import { GALLERY_CONFIG, GalleryConfig } from 'ng-gallery';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { loadingScreenInterceptor } from './loading-screen.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -18,7 +20,8 @@ export const appConfig: ApplicationConfig = {
       positionClass: 'toast-bottom-right',
       progressBar: true
     }),
-    provideHttpClient(withInterceptors([errorsInterceptor])),
+    provideHttpClient(withInterceptors([errorsInterceptor, loadingScreenInterceptor])),
+    importProvidersFrom(NgxSpinnerModule),
     provideRouter(routes),
     {
       provide: APP_CONFIG,
