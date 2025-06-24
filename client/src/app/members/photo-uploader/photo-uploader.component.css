@@ -1,0 +1,9 @@
+.upload-box {
+  border: 2px dashed #ccc;
+  transition: 0.3s ease-in-out;
+}
+
+.file-over {
+  border: dotted 3px red;
+  background-color: #f0fff0;
+}

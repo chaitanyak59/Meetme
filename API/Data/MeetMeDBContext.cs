@@ -1,10 +1,14 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using API.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Data;
 
-public class MeetMeDBContext : DbContext
+public class MeetMeDBContext : IdentityDbContext<AppUser, AppRole, int,
+IdentityUserClaim<int>, AppUserRole, IdentityUserLogin<int>,
+IdentityRoleClaim<int>, IdentityUserToken<int>>
 {
     private readonly IConfiguration _config;
 
@@ -21,12 +25,25 @@ public class MeetMeDBContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<AppUser>()
             .HasMany(e => e.Photos)
             .WithOne(e => e.AppUser)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<AppUser>()
+            .HasMany(e => e.UserRoles)
+            .WithOne(e => e.User)
+            .HasForeignKey(e => e.UserId)
+            .IsRequired();
+
+        modelBuilder.Entity<AppRole>()
+            .HasMany(e => e.UserRoles)
+            .WithOne(e => e.Role)
+            .HasForeignKey(e => e.RoleId)
+            .IsRequired();
     }
 
-    public DbSet<AppUser> Users { get; set; }
     public DbSet<Photo> Photos { get; set; }
 }

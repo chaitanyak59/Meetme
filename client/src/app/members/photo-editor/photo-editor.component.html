@@ -1,0 +1,17 @@
+<div class="row">
+    @if(member) {
+    @for (photo of member.photos; track photo.id)
+    {
+    <div class="col-2">
+        <img src="{{photo.url}}" alt="{{photo.id}}" class="img-thumbnail my-2" />
+        <div class="text-center">
+            <button class="btn btn-sm">Main</button>
+            <button class="btn btn-sm btn-danger" (click)="deleteProfilePhoto(photo.id)">
+                <i class="fa fa-solid fa-trash"></i>
+            </button>
+        </div>
+    </div>
+    }
+    }
+    <app-photo-uploader [uploadUrl]="'/users/photo'" (onMemberProfileUpdated)="onMemberProfileUpdated.emit()"></app-photo-uploader>
+</div>

@@ -1,5 +1,5 @@
 <ngx-spinner type="ball-scale-multiple"></ngx-spinner>
-<app-nav (loginSubmit)="handleLogin($event)"  (logoutSubmit)="handleLogout()" [isLoggedIn]="(accountSvc.isLoggedIn()) ?? null"/>
+<app-nav (loginSubmit)="handleLogin($event)"  (logoutSubmit)="handleLogout()" [isLoggedIn]="(accountSvc.isLoggedIn())"/>
 
 <div class="container" style="margin-top: 100px;">
   <router-outlet />

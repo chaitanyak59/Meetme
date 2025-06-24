@@ -48,11 +48,11 @@ public class UserRepository : IUserRepository
 
     public async Task<bool> UserExistsAsync(string username)
     {
-        return await _context.Users.AsNoTracking().AnyAsync(u => u.UserName.ToLower() == username.ToLower());
+        return await _context.Users.AsNoTracking().AnyAsync(u => u.NormalizedUserName == username.ToUpper());
     }
 
     public async Task<AppUser?>GetUserByNameAsync(string userName)
     {
-        return await _context.Users.Include(u => u.Photos).AsNoTracking().FirstOrDefaultAsync(u => u.UserName.ToLower() == userName.ToLower());
+        return await _context.Users.Include(u => u.Photos).AsNoTracking().FirstOrDefaultAsync(u => EF.Functions.Like(u.UserName, userName));
     }
 }

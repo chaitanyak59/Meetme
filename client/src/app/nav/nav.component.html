@@ -29,13 +29,16 @@
 
         <!-- Account Menu -->
         @if(isLoggedIn?.isLoggedIn) {
-        <div class="dropdown">
-            <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenu2"
+        <div class="dropdown d-flex align-items-center gap-2">
+            <img [src]="isLoggedIn?.thumbnail" alt="User Photo"
+                class="rounded-circle user-photo" />
+            
+                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" id="dropdownMenu2"
                 data-bs-toggle="dropdown" aria-expanded="false">
                 Welcome, {{ isLoggedIn?.userName || 'User' | titlecase }}
             </button>
             <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenu2">
-                <li><a class="dropdown-item" routerLink="/profile/edit" >Edit Profile</a></li>
+                <li><a class="dropdown-item" routerLink="/profile/edit">Edit Profile</a></li>
                 <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
             </ul>
         </div>

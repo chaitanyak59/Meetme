@@ -1,8 +1,12 @@
 using System.Text;
+using API.Data;
 using API.DTO;
+using API.Entities;
 using API.Extensions;
 using API.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,13 +17,17 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Migrations
+using (var scope = app.Services.CreateScope())
 {
-    app.MapOpenApi();
+    var dbContext = scope.ServiceProvider.GetRequiredService<MeetMeDBContext>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<AppRole>>();
+
+    dbContext.Database.Migrate();
+    SeedEntityDTO.SeedDataAsync(userManager, roleManager).GetAwaiter().GetResult();
 }
 
-SeedEntityDTO.SeedDataAsync(app.Services).GetAwaiter().GetResult();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseDefaultFiles();
 app.UseStaticFiles();

@@ -1,14 +1,11 @@
 using System;
 using API.Extensions;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Entities;
 
-public class AppUser
+public class AppUser : IdentityUser<int>
 {
-    public int Id { get; set; }
-    public byte[] PasswordHash { get; set; } = [];
-    public byte[] PasswordSalt { get; set; } = [];
-    public required string UserName { get; set; }
     public DateOnly DateOfBirth { get; set; }
     public string KnownAs { get; set; } = string.Empty;
     public DateTime Created { get; set; } = DateTime.UtcNow;
@@ -20,4 +17,5 @@ public class AppUser
     public string? City { get; set; } = string.Empty;
     public string? Country { get; set; } = string.Empty;
     public virtual ICollection<Photo> Photos { get; set; } = new List<Photo>();
+    public ICollection<AppUserRole> UserRoles { get; set; } = [];
 }

@@ -5,6 +5,7 @@ using API.DTO;
 using API.Entities;
 using API.Repository;
 using API.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,10 +17,13 @@ public class AccountController : BaseApiController
 
     public ITokenService tokenService { get; }
 
-    public AccountController(IUserRepository userRepository, ITokenService tokenService)
+    private readonly UserManager<AppUser> _userManager;
+
+    public AccountController(IUserRepository userRepository, ITokenService tokenService, UserManager<AppUser> userManager)
     {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
+        this._userManager = userManager;
     }
 
     [HttpPost("register")]
@@ -40,25 +44,23 @@ public class AccountController : BaseApiController
             return BadRequest("Username already exists");
         }
 
-        // Hash the password using HMACSHA512
-        {
-            using var hmac = new HMACSHA512();
-            var passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-            var passwordSalt = hmac.Key;
-            var user = new AppUser
-            {
-                UserName = username,
-                PasswordHash = passwordHash,
-                PasswordSalt = passwordSalt,
-                Gender = "Male",
-            };
 
-            if (await userRepository.RegisterUserAsync(user) == false)
+        var user = new AppUser
+        {
+            UserName = username,
+            Gender = "Male",
+            KnownAs = username,
+        };
+        var result = await _userManager.CreateAsync(user, password);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors.Select(e => new
             {
-                return BadRequest("Failed to register user");
-            }
-            return Ok(new { Message = "User registered successfully", UserName = username, Token = tokenService.CreateToken(user) });
+                Error = e.Description
+            }));
         }
+        return Ok(new { Message = "User registered successfully", UserName = username, Token = tokenService.CreateToken(user), Thumbnail = user.Photos.FirstOrDefault(p => p.IsMain)?.Url });
     }
 
     [HttpPost("login")]
@@ -80,15 +82,13 @@ public class AccountController : BaseApiController
             return Unauthorized("Invalid username or password");
         }
 
-        // Verify the password
-        using var hmac = new HMACSHA512(user.PasswordSalt);
-        var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-
-        if (!computedHash.SequenceEqual(user.PasswordHash))
+        var passwordVerified = await _userManager.CheckPasswordAsync(user, password);
+        if (!passwordVerified)
         {
             return Unauthorized("Invalid username or password");
         }
-
-        return Ok(new { Message = "Login successful", Token = tokenService.CreateToken(user), user.UserName });
+        user.LastActive = DateTime.UtcNow;
+        await this.userRepository.UpdateUserAsync(user);
+        return Ok(new { Message = "Login successful", Token = tokenService.CreateToken(user), user.UserName, Thumbnail = user.Photos.FirstOrDefault(p => p.IsMain)?.Url });
     }
 }

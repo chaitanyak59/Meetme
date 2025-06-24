@@ -11,6 +11,7 @@ import { errorsInterceptor } from './errors.interceptor';
 import { GALLERY_CONFIG, GalleryConfig } from 'ng-gallery';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { loadingScreenInterceptor } from './loading-screen.interceptor';
+import { FileUploadModule } from 'ng2-file-upload';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,6 +23,7 @@ export const appConfig: ApplicationConfig = {
     }),
     provideHttpClient(withInterceptors([errorsInterceptor, loadingScreenInterceptor])),
     importProvidersFrom(NgxSpinnerModule),
+    importProvidersFrom(FileUploadModule),
     provideRouter(routes),
     {
       provide: APP_CONFIG,

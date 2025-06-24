@@ -11,11 +11,13 @@ import { convertDateToLocale } from '../../utils/app.utils';
 import { ToastrService } from 'ngx-toastr';
 import { CanComponentDeactivate } from '../../utils/models/can-deactivate';
 import rfdc from 'rfdc';
+import { PhotoEditorComponent } from "../photo-editor/photo-editor.component";
+import { AuthSignal } from '../../utils/models/auth-types';
 
 @Component({
   selector: 'app-members-edit',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, TabsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, TabsModule, PhotoEditorComponent],
   templateUrl: './members-edit.component.html',
   styleUrl: './members-edit.component.css'
 })
@@ -42,6 +44,10 @@ export class MembersEditComponent implements OnInit, CanComponentDeactivate {
         next: (response) => {
           this.member = response;
           this.originalState = this.clone(response);
+          this.accountSvc.refreshUser({
+            userName: response.username,
+            thumbnail: response.photos.find(ph => ph.isMain)?.url as string
+          });
         },
         error: (error) => {
           console.error('Error loading member:', error);

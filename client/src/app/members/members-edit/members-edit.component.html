@@ -52,7 +52,7 @@
                         </form>
                     </tab>
                     <tab class="mt-4" heading="Edit Photos">
-                        Photos Editing TBD
+                        <app-photo-editor [member]="member" (onMemberProfileUpdated)="loadMember()"></app-photo-editor>
                     </tab>
                 </tabset>
             </div>

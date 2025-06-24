@@ -4,20 +4,17 @@ using System.Text;
 using System.Text.Json;
 using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.DTO;
 
 public class SeedEntityDTO
 {
-    public static async Task SeedDataAsync(IServiceProvider serviceProvider)
+    public static async Task SeedDataAsync(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
     {
-        using var scope = serviceProvider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<MeetMeDBContext>();
-        // Launch Pending Migrations
-        await dbContext.Database.MigrateAsync();
 
-        if (dbContext.Users.AsNoTracking().Any())
+        if (await userManager.Users.AnyAsync())
         {
             Console.WriteLine("Skipped seeding. Data already exists.");
             return;
@@ -37,23 +34,39 @@ public class SeedEntityDTO
             return;
         }
 
+        // Add default roles
+        var roles = new List<AppRole>()
+        {
+            new() {Name = "Member"},
+            new() {Name = "Admin"},
+            new() {Name = "Moderator"},
+        };
+
+        foreach (var role in roles)
+        {
+            await roleManager.CreateAsync(role);
+        }
+
         foreach (var user in users)
         {
-            using var hmac = new HMACSHA512();
+            if (string.IsNullOrWhiteSpace(user.UserName)) continue;
 
-            user.UserName = user.UserName.ToLower();
-            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("Pa$$w0rd"));
-            user.PasswordSalt = hmac.Key;
-
-            foreach (var photo in user.Photos)
+            foreach (var photo in user.Photos ?? Enumerable.Empty<Photo>())
             {
                 photo.DateAdded = DateTime.UtcNow;
             }
 
-            dbContext.Users.Add(user);
+            var result = await userManager.CreateAsync(user, "Pa$$w0rd");
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(user, "Member");
+                Console.WriteLine($"Seeded user: {user.UserName}");
+            }
+            else
+            {
+                Console.WriteLine($"Failed to create user: {user.UserName}");
+            }
         }
         Console.WriteLine("Seeding data Successful...");
-        await dbContext.SaveChangesAsync();
     }
-
 }

@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive, RouterModule } from '@angular/router';
+import { AuthSignal } from '../utils/models/auth-types';
 
 @Component({
   selector: 'app-nav',
@@ -14,7 +15,7 @@ export class NavComponent {
   @Output() loginSubmit: EventEmitter<{username: string, password: string}> = new EventEmitter();
   @Output() logoutSubmit: EventEmitter<void> = new EventEmitter();
 
-  @Input() isLoggedIn: {userName: string, isLoggedIn: boolean} | null = null;
+  @Input() isLoggedIn?: AuthSignal;
 
 
   model: any = {
