@@ -43,7 +43,18 @@ IdentityRoleClaim<int>, IdentityUserToken<int>>
             .WithOne(e => e.Role)
             .HasForeignKey(e => e.RoleId)
             .IsRequired();
+
+        modelBuilder.Entity<Message>()
+            .HasOne(e => e.Recipient)
+            .WithMany(e => e.MessagesReceived)
+            .OnDelete(DeleteBehavior.Restrict);
+
+         modelBuilder.Entity<Message>()
+            .HasOne(e => e.Sender)
+            .WithMany(e => e.MessagesSent)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 
     public DbSet<Photo> Photos { get; set; }
+    public DbSet<Message> Messages { get; set; }
 }

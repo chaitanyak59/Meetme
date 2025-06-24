@@ -18,4 +18,6 @@ public class AppUser : IdentityUser<int>
     public string? Country { get; set; } = string.Empty;
     public virtual ICollection<Photo> Photos { get; set; } = new List<Photo>();
     public ICollection<AppUserRole> UserRoles { get; set; } = [];
+    public ICollection<Message> MessagesSent { get; set; } = [];
+    public ICollection<Message> MessagesReceived { get; set; } = [];
 }
