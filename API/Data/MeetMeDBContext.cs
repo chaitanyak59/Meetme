@@ -20,7 +20,7 @@ IdentityRoleClaim<int>, IdentityUserToken<int>>
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        Console.WriteLine(optionsBuilder.IsConfigured);
+        Console.WriteLine("Database is ready : " + optionsBuilder.IsConfigured);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

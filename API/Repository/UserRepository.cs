@@ -31,7 +31,7 @@ public class UserRepository : IUserRepository
 
     public async Task<AppUser?> GetUserByIdAsync(int id)
     {
-        return await _context.Users.Include(u => u.Photos).AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
+        return await _context.Users.Include(u => u.Photos).FirstOrDefaultAsync(u => u.Id == id);
     }
 
     public Task<bool> RegisterUserAsync(AppUser user)
@@ -53,6 +53,6 @@ public class UserRepository : IUserRepository
 
     public async Task<AppUser?>GetUserByNameAsync(string userName)
     {
-        return await _context.Users.Include(u => u.Photos).AsNoTracking().FirstOrDefaultAsync(u => EF.Functions.Like(u.UserName, userName));
+        return await _context.Users.Include(u => u.Photos).FirstOrDefaultAsync(u => EF.Functions.Like(u.UserName, userName));
     }
 }

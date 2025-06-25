@@ -6,7 +6,7 @@ using AutoMapper;
 
 namespace API.Helpers;
 
-public class AutoMapperProfiles: Profile
+public class AutoMapperProfiles : Profile
 {
     public AutoMapperProfiles()
     {
@@ -18,5 +18,11 @@ public class AutoMapperProfiles: Profile
 
         CreateMap<AppUser, UpdateMemberDTO>().ReverseMap();
         CreateMap<Photo, PhotoDTO>();
+
+        CreateMap<Message, MessageDTO>()
+            .ForMember(dest => dest.SenderPhotoUrl, opt => opt.MapFrom(src => src.Sender.Photos.FirstOrDefault(p => p.IsMain)!.Url))
+            .ForMember(dest => dest.RecipientPhotoUrl, opt => opt.MapFrom(src => src.Recipient.Photos.FirstOrDefault(p => p.IsMain)!.Url))
+            .ForMember(dest => dest.SenderName, opt => opt.MapFrom(src => src.Sender.UserName))
+            .ForMember(dest => dest.RecipientName, opt => opt.MapFrom(src => src.Recipient.UserName));
     }
 }

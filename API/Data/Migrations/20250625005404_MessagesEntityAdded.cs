@@ -25,7 +25,6 @@ namespace API.Data.Migrations
                     SenderDeleted = table.Column<bool>(type: "bit", nullable: false),
                     ReceipientDeleted = table.Column<bool>(type: "bit", nullable: false),
                     SenderId = table.Column<int>(type: "int", nullable: false),
-                    RecepientId = table.Column<int>(type: "int", nullable: false),
                     RecipientId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

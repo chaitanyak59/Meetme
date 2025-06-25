@@ -63,6 +63,8 @@ public static class ApplicationServiceExtensions
 
         // Repositories
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IMessageRepository, MessageRepository>();
+
         return services;
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(MeetMeDBContext))]
-    [Migration("20250624234500_MessagesEntityAdded")]
+    [Migration("20250625005404_MessagesEntityAdded")]
     partial class MessagesEntityAdded
     {
         /// <inheritdoc />
@@ -190,9 +190,6 @@ namespace API.Data.Migrations
 
                     b.Property<bool>("ReceipientDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<int>("RecepientId")
-                        .HasColumnType("int");
 
                     b.Property<int>("RecipientId")
                         .HasColumnType("int");
