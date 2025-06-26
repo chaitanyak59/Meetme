@@ -17,6 +17,23 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install Angular CLI
+        run: npm install -g @angular/cli@17.3.17
+        working-directory: ./client
+
+      - name: Install frontend dependencies
+        run: npm install
+        working-directory: ./client
+
+      - name: Build Angular app
+        run: ng build --configuration production
+        working-directory: ./client
 
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
