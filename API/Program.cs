@@ -16,6 +16,17 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseHttpsRedirection();
+app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
+app.MapControllers();
+app.MapFallbackToController("Index", "Fallback");
 
 // Migrations
 using (var scope = app.Services.CreateScope())
@@ -27,16 +38,5 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.Migrate();
     SeedEntityDTO.SeedDataAsync(userManager, roleManager).GetAwaiter().GetResult();
 }
-
-app.UseMiddleware<ExceptionMiddleware>();
-app.UseDefaultFiles();
-app.UseStaticFiles();
-
-app.UseHttpsRedirection();
-app.UseCors();
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.MapControllers();
 
 app.Run();

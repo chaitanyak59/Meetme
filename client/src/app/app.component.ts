@@ -37,9 +37,6 @@ export class AppComponent {
       next: (response: any) => {
         this.toastr.success(`Welcome ${response.userName}!`, 'Succesfully logged in');
         this.router.navigateByUrl('/');
-      },
-      error: (error: any) => {
-          this.toastr.error(`Incorrect Credentials`, 'Error');
       }
     });
   }
