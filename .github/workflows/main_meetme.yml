@@ -28,7 +28,7 @@ jobs:
         working-directory: ./client
 
       - name: Install frontend dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
         working-directory: ./client
 
       - name: Build Angular app
